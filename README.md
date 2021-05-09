@@ -6,7 +6,8 @@ Unity 3D v. 2020.3<br>
 Unity OpenXR 
 
 ### Description:
-Pacman clone in VR using Unity 2020.3 and Unity OpenXR with Oculus controller
+Pacman clone in VR using Unity 2020.3 and Unity OpenXR with Oculus controller.
+Using new InputSystem, not using any library for inputs and interaction
 
 
 ### Executables:
