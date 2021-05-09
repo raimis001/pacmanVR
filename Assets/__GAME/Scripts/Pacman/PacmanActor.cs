@@ -46,7 +46,7 @@ public class PacmanActor : MonoBehaviour
 		rightArrow.SetActive(right);
 		downArrow.SetActive(down);
 	}
-
+#if UNITY_EDITOR
 	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.red;
@@ -64,5 +64,5 @@ public class PacmanActor : MonoBehaviour
 		if (down)
 			UnityEditor.Handles.DrawSolidArc(transform.position, Vector3.up, Quaternion.AngleAxis(90 - angle * 0.5f, Vector3.up) * transform.forward, angle, 2);
 	}
-
+#endif
 }

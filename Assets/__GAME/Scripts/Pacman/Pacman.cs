@@ -100,11 +100,13 @@ public class Pacman : MonoBehaviour
 	{
 		if (!GameStarted)
 		{
+#if UNITY_EDITOR
 			if (debugStart)
 			{
 				GameStarted = true;
 				Debug.Log("Start game, mode: " + mode);
 			}
+#endif
 			return;
 		}
 
