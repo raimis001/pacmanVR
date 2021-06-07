@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/__GAME/Scenes/Pacman.unity
+    path: Assets/Scenes/Pacman.unity
     guid: 0ab7a8d819cab0347944249d1b6ba22a
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 2c57b9a772271d34facfbfdf5bfef730, type: 2}

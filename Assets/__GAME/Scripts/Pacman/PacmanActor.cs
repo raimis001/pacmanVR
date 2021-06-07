@@ -17,7 +17,19 @@ public class PacmanActor : MonoBehaviour
 	private GameObject rightArrow;
 	[SerializeField]
 	private GameObject downArrow;
+	[SerializeField]
+	private GameObject upArrowMob;
+	[SerializeField]
+	private GameObject leftArrowMob;
+	[SerializeField]
+	private GameObject rightArrowMob;
+	[SerializeField]
+	private GameObject downArrowMob;
 
+	private GameObject upA => Application.platform == RuntimePlatform.Android ? upArrowMob : upArrow;
+	private GameObject leftA => Application.platform == RuntimePlatform.Android ? leftArrowMob : leftArrow;
+	private GameObject rightA => Application.platform == RuntimePlatform.Android ? rightArrowMob : rightArrow;
+	private GameObject downA => Application.platform == RuntimePlatform.Android ? downArrowMob : downArrow;
 
 	public PacmanDirection direction { get; set; }
 
@@ -27,10 +39,24 @@ public class PacmanActor : MonoBehaviour
 		if (leftArrow) leftArrow.SetActive(left);
 		if (rightArrow) rightArrow.SetActive(right);
 		if (downArrow) downArrow.SetActive(down);
+
+		if (upArrowMob) upArrowMob.SetActive(false);
+		if (leftArrowMob) leftArrowMob.SetActive(false);
+		if (rightArrowMob) rightArrowMob.SetActive(false);
+		if (downArrowMob) downArrowMob.SetActive(false);
 	}
 
 	private void Start()
 	{
+		upArrow.SetActive(false);
+		leftArrow.SetActive(false);
+		rightArrow.SetActive(false);
+		downArrow.SetActive(false);
+		upArrowMob.SetActive(false);
+		leftArrowMob.SetActive(false);
+		rightArrowMob.SetActive(false);
+		downArrowMob.SetActive(false);
+
 		direction = 0;
 		if (up)
 			direction |= PacmanDirection.Up;
@@ -41,10 +67,10 @@ public class PacmanActor : MonoBehaviour
 		if (left)
 			direction |= PacmanDirection.Left;
 
-		upArrow.SetActive(up);
-		leftArrow.SetActive(left);
-		rightArrow.SetActive(right);
-		downArrow.SetActive(down);
+		upA.SetActive(up);
+		leftA.SetActive(left);
+		rightA.SetActive(right);
+		downA.SetActive(down);
 	}
 #if UNITY_EDITOR
 	private void OnDrawGizmos()

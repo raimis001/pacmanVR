@@ -6,34 +6,34 @@ EditorUserSettings:
   serializedVersion: 4
   m_ConfigSettings:
     RecentlyUsedScenePath-0:
-      value: 22424703114646680e0b0227036c6c111b07142f1f2b233e2867083debf42d
-      flags: 0
-    RecentlyUsedScenePath-1:
       value: 224247031146466c20313f211905562f2112193a23261961620d183eedaf101dcfc867a7f234362820
       flags: 0
-    RecentlyUsedScenePath-2:
+    RecentlyUsedScenePath-1:
       value: 224247031146466d0c1a18231c364c3105041d3e3f671031393d1c3ff7f3152bf1e222fad8123a3d2f1bc9350336153ae0290608fd1b031f4041ce0d14f115005ef339fa32cd1e0ad23f15c9c509d4f1f6d9d7e1c8e2f389e1fba5fffbc3edfdfbf4ebeea4a1e8d9
       flags: 0
-    RecentlyUsedScenePath-3:
+    RecentlyUsedScenePath-2:
       value: 22424703114646691728341d38167b1510111d293867142a051c3936e4e6313bf6d812ccca157129370bfb25
       flags: 0
-    RecentlyUsedScenePath-4:
+    RecentlyUsedScenePath-3:
       value: 224247031146466432292d0f356c6c1313191d39631c2f3339281e7df7ee3d2cfb
       flags: 0
-    RecentlyUsedScenePath-5:
+    RecentlyUsedScenePath-4:
       value: 2242470311464679040125095f075a1d19583c2f212768252320092a
       flags: 0
-    RecentlyUsedScenePath-6:
+    RecentlyUsedScenePath-5:
       value: 22424703114646642e1c0927003a6033170357151f2029271f26123eddd63b34a2b662a6d4393a323c11a00f05331133f7390a0ef80e441e1f07e917
       flags: 0
-    RecentlyUsedScenePath-7:
+    RecentlyUsedScenePath-6:
       value: 22424703114646642e1c0927003a6033170357151f2029271f26123eddd63b34a2bf79ccff3b322c3507d06c55701431fb1e10
       flags: 0
-    RecentlyUsedScenePath-8:
+    RecentlyUsedScenePath-7:
       value: 224247031146466432292d0f356c6c1313191d39630b293e232c1e27b6ae2136ebf32f
       flags: 0
-    RecentlyUsedScenePath-9:
+    RecentlyUsedScenePath-8:
       value: 224247031146466432292d0f356c6c1313191d39631827332028137df7ee3d2cfb
+      flags: 0
+    RecentlyUsedScenePath-9:
+      value: 53505651040d0d035c570f2312730c44414e4c7e7e7c7f347c2b4b31e3b26639
       flags: 0
     vcSharedLogLevel:
       value: 0d5e400f0650
@@ -49,3 +49,4 @@ EditorUserSettings:
   m_VCHierarchyOverlayIcons: 1
   m_VCOtherOverlayIcons: 1
   m_VCAllowAsyncUpdate: 1
+  m_ArtifactGarbageCollection: 1
