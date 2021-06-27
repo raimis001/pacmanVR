@@ -23,9 +23,14 @@ public class PacmanGhost : MonoBehaviour
 	bool moving = true;
 	bool makeChoice = false;
 	bool started = false;
+	bool paused = false;
 
 	PacmanActor actor;
 	Pacman pacman;
+
+	Vector3 startPosition;
+	Quaternion startRotation;
+	int scoreDelta = 0;
 
 	Transform corner =>
 		type switch
@@ -40,12 +45,17 @@ public class PacmanGhost : MonoBehaviour
 	private void Start()
 	{
 		pacman = FindObjectOfType<Pacman>();
+		startPosition = transform.position;
+		startRotation = transform.rotation;
 	}
 
 	float pinkyDelay;
 	private void Update()
 	{
 		if (!Pacman.GameStarted)
+			return;
+
+		if (paused)
 			return;
 
 		if (!started)
@@ -62,12 +72,12 @@ public class PacmanGhost : MonoBehaviour
 						pinkyDelay += Time.deltaTime;
 					break;
 				case GhostType.Inky:
-					if (pacman.Score > 30)
+					if (pacman.Score - scoreDelta > 30)
 						started = true;
 
 					break;
 				case GhostType.Clyde:
-					if (pacman.Score > 80)
+					if (pacman.Score - scoreDelta > 80)
 						started = true;
 
 					break;
@@ -95,6 +105,7 @@ public class PacmanGhost : MonoBehaviour
 	}
 
 
+
 	void MakeChoice()
 	{
 		moving = false;
@@ -117,7 +128,7 @@ public class PacmanGhost : MonoBehaviour
 			return true;
 
 		}
-		Debug.Log("Make choce");
+		//Debug.Log("Make choce");
 
 		moving = true;
 		makeChoice = true;
@@ -224,7 +235,7 @@ public class PacmanGhost : MonoBehaviour
 		if (!other.CompareTag("Actor"))
 			return;
 	
-		Debug.Log("Enter actor");
+		//Debug.Log("Enter actor");
 		reachDistance = Mathf.Infinity;
 		makeChoice = false;
 	}
@@ -248,7 +259,8 @@ public class PacmanGhost : MonoBehaviour
 
 		if (!other.CompareTag("Actor"))
 			return;
-		Debug.Log("Exit actor");
+		
+		//Debug.Log("Exit actor");
 		actor = null;
 		makeChoice = false;
 
@@ -287,5 +299,32 @@ public class PacmanGhost : MonoBehaviour
 		return true;
 	}
 
+	public void GotoRest(bool restore = true)
+	{
+		direction = PacmanDirection.Righ;
+		transform.SetPositionAndRotation(startPosition, startRotation);
+		RotateGhost(PacmanDirection.Righ);
+		paused = true;
+		started = false;
+		
+		if (restore)
+			Invoke(nameof(Restore), 5f);
+	}
 
+	public void Restore()
+	{
+		//transform.position = pacman.ghostPoint.position;
+		scoreDelta = pacman.Score;
+		pinkyDelay = 0;
+		paused = false;
+	
+	}
+
+	public void Reset()
+	{
+		scoreDelta = 0;
+		pinkyDelay = 0;
+		paused = false;
+		started = false;
+	}
 }

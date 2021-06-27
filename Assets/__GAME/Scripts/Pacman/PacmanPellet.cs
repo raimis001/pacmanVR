@@ -8,9 +8,16 @@ public class PacmanPellet : MonoBehaviour
 	internal Transform refence;
 
 	Pacman pacman;
-	void Start()
+
+	private void Awake()
 	{
 		pacman = FindObjectOfType<Pacman>();
+		pacman.pellets.Add(this);
+
+
+	}
+	void OnEnable()
+	{
 		pacman.CreatePellet(this);
 		Pos();
 	}

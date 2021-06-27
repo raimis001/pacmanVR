@@ -66,6 +66,13 @@ public class Pacman : MonoBehaviour
 	public AudioSource audioRotate;
 	public AudioSource auidoMove;
 
+	[Header("Lives")]
+	public GameObject[] livesIcons;
+	public GameObject gameOver;
+	Vector3 startPoint;
+	int lives = 3;
+	bool isDying;
+
 	[Header("Debug")]
 	public bool moving;
 	public bool prepareRight;
@@ -79,7 +86,8 @@ public class Pacman : MonoBehaviour
 	public static bool GameStarted = false;
 
 	internal PacmanDirection direction = PacmanDirection.Righ;
-
+	PacmanGhost[] ghosts;
+	readonly internal List<PacmanPellet> pellets = new List<PacmanPellet>();
 
 	//Vector3 moveVector =>
 	//	direction switch
@@ -94,6 +102,8 @@ public class Pacman : MonoBehaviour
 	bool makeChoice;
 	private void Start()
 	{
+		startPoint = transform.position;
+		ghosts = FindObjectsOfType<PacmanGhost>();
 		modeText.text = "stop";
 	}
 	private void Update()
@@ -109,6 +119,9 @@ public class Pacman : MonoBehaviour
 #endif
 			return;
 		}
+
+		if (isDying)
+			return;
 
 		playTime += Time.deltaTime;
 		if (playTime >= times[(int)mode])
@@ -270,8 +283,6 @@ public class Pacman : MonoBehaviour
 		if (referenceSprite)
 			referenceSprite.localPosition = new Vector3(dx, -dy, 0);
 
-
-
 		if (!playerPoint || !playerPosition)
 			return;
 
@@ -293,21 +304,23 @@ public class Pacman : MonoBehaviour
 		audioHit.Play();
 		Score += 10;
 		anim.SetTrigger("Eat");
-		Destroy(collision.gameObject);
+		collision.gameObject.SetActive(false);
 	}
 
 	bool isTeleported;
 	Collider teleportCollider;
 	private void OnTriggerEnter(Collider other)
 	{
+		if (isDying)
+			return;
+
 		if (other.CompareTag("Ghost"))
 		{
-			Die();
+			Die(other);
+			return;
 		}
 
-		if (!other.CompareTag("Teleport"))
-			return;
-		if (isTeleported)
+		if (!other.CompareTag("Teleport") || isTeleported)
 			return;
 
 		teleportCollider = other;
@@ -315,10 +328,6 @@ public class Pacman : MonoBehaviour
 		isTeleported = true;
 		PacmanTeleport teleport = other.GetComponentInParent<PacmanTeleport>();
 		transform.position = new Vector3(teleport.targetPoint.position.x, transform.position.y, teleport.targetPoint.position.z);
-	}
-	private void Die()
-	{
-		throw new NotImplementedException();
 	}
 
 	private void OnTriggerStay(Collider other)
@@ -329,7 +338,6 @@ public class Pacman : MonoBehaviour
 		if (!currentActor)
 		{
 			reachDistance = Mathf.Infinity;
-			//	Debug.Log("Enter actor");
 		}
 
 		currentActor = other.GetComponent<PacmanActor>();
@@ -351,7 +359,6 @@ public class Pacman : MonoBehaviour
 		currentActor = null;
 		makeChoice = false;
 		reachDistance = Mathf.Infinity;
-		//Debug.Log("Exit actor");
 	}
 
 	public void OnDirectionSwitch(ButtonTouch button, XRHand hand)
@@ -363,10 +370,17 @@ public class Pacman : MonoBehaviour
 				prepareRight = false;
 				if (!GameStarted)
 				{
-					GameStarted = true;
-					moving = true;
-					modeText.text = mode.ToString();
+					if (lives > 0)
+					{
+						if (isDying)
+							return;
 
+						GameStarted = true;
+						moving = true;
+						modeText.text = mode.ToString();
+						return;
+					}
+					RestartGame();
 				}
 
 				break;
@@ -418,7 +432,6 @@ public class Pacman : MonoBehaviour
 
 	internal void ChangeMode(float delay = 0)
 	{
-		//Debug.Log("Change mode to: " + mode);
 		modeText.text = mode.ToString();
 
 		audioRadio.Stop();
@@ -438,6 +451,83 @@ public class Pacman : MonoBehaviour
 	{
 		pellet.refence = Instantiate(refencePellet, referenceParent);
 		pellet.refence.gameObject.SetActive(true);
+	}
+
+	private void Die(Collider other)
+	{
+		if (isDying)
+			return;
+
+		GameStarted = false;
+		isDying = true;
+		foreach (PacmanGhost ghost in ghosts)
+		{
+			ghost.GotoRest(false);
+		}
+
+		lives--;
+		for (int i = 0; i < livesIcons.Length; i++)
+		{
+			livesIcons[i].SetActive(i < lives);
+		}
+		anim.SetBool("Die", true);
+		if (lives > 0)
+			StartCoroutine(Die());
+		else
+			EndGame();
+	}
+
+	IEnumerator Die()
+	{
+		yield return new WaitForSeconds(3f);
+		transform.position = startPoint;
+		direction = PacmanDirection.Righ;
+		transform.eulerAngles = Vector3.zero;
+		playerPosition.transform.eulerAngles = Vector3.zero;
+		anim.SetBool("Die", false);
+		yield return new WaitForSeconds(1f);
+		foreach (PacmanGhost ghost in ghosts)
+		{
+			ghost.Restore(); ;
+		}
+
+		isDying = false;
+		//GameStarted = true;
+	}
+
+	void EndGame()
+	{
+		transform.position = startPoint;
+		direction = PacmanDirection.Righ;
+		transform.eulerAngles = Vector3.zero;
+		playerPosition.transform.eulerAngles = Vector3.zero;
+
+		gameOver.SetActive(true);
+		foreach (PacmanGhost ghost in ghosts)
+		{
+			ghost.GotoRest(false);
+		}
+	}
+
+	void RestartGame()
+	{
+		gameOver.SetActive(false);
+		anim.SetBool("Die", false);
+		Score = 0;
+		isDying = false;
+		lives = 3;
+		for (int i = 0; i < livesIcons.Length; i++)
+		{
+			livesIcons[i].SetActive(true);
+		}
+		foreach (PacmanPellet pellet in pellets)
+		{
+			pellet.gameObject.SetActive(true);
+		}
+		foreach (PacmanGhost ghost in ghosts)
+		{
+			ghost.Reset(); 
+		}
 	}
 
 }
